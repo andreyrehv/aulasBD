@@ -42,7 +42,7 @@ create table tb_item_vendido(
 GO
 create table tb_vendas_canceladas(
        id_venda_canc int PRIMARY KEY identity(1,1),
-       id_item_venda int not null,
+       id_item_venda int UNIQUE not null,
        
 )
 GO
@@ -68,7 +68,7 @@ alter table tb_item_vendido
 
 	  alter table tb_vendas_canceladas
       ADD CONSTRAINT fk_item_vendido
-      FOREIGN KEY (id_item_venda) REFERENCES tb_item_vendido(id_item_venda)
+      FOREIGN KEY UNIQUE (id_item_venda) REFERENCES tb_item_vendido(id_item_venda)
 	  go
 
 	  alter table tb_clientes
