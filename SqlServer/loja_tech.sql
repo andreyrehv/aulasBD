@@ -1,4 +1,4 @@
-use master
+use master 
 go
 
 drop database loja_tech
@@ -15,9 +15,8 @@ go
 create table tb_vendas(
        id_venda int primary key IDENTITY(1,1),
        id_cliente int not null,
-	   id_item_vendido int not null,
-       data date not null,
-       desconto decimal(2,2)
+	   id_item_vendido int not null
+             
 )
 GO
 
@@ -33,8 +32,7 @@ create table tb_clientes(
 GO
 create table tb_item_vendido(
        id_item_venda int PRIMARY KEY identity(1,1),
-       id_produto int not null,
-       id_hardware int not null,
+       id_produto int not null,       
        qtde_item int not null,
        pco_vda decimal(8,2) not null
 	   
@@ -48,9 +46,9 @@ create table tb_vendas_canceladas(
 GO
 create table tb_produtos(
        id_produto int PRIMARY KEY IDENTITY(1,1),
-       descricao nvarchar(50) not null,
-       preco_unit decimal NOT NULL,
-       qtde_atual int NOT NULL, 
+       descricao nvarchar(50) ,
+       preco_unit decimal ,
+       qtde_atual int , 
        qtde_minima int,
 )
 GO
@@ -62,19 +60,58 @@ alter table tb_item_vendido
 	  go
 
 	  alter table tb_vendas
-      ADD CONSTRAINT fk_id_item_venda
-      FOREIGN KEY (id_item_venda) REFERENCES tb_item_vendido(id_item_venda)
+      ADD CONSTRAINT fk_id_venda
+      FOREIGN KEY (id_item_vendido) REFERENCES tb_item_vendido(id_item_venda)
 	  go
 
 	  alter table tb_vendas_canceladas
       ADD CONSTRAINT fk_item_vendido
-      FOREIGN KEY UNIQUE (id_item_venda) REFERENCES tb_item_vendido(id_item_venda)
+      FOREIGN KEY (id_item_venda) REFERENCES tb_item_vendido(id_item_venda)
 	  go
 
 	  alter table tb_clientes
       ADD CONSTRAINT fk_id_cliente
       FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id_cliente)
 	  go
+  
+insert into tb_produtos values 
+		('gabinete', '50.2', '10', '10'),
+		('monitor', '150.2', '10', '10'),
+		('teclado', '550.2', '10', '10'),
+		('mouse', '15.2', '10', '10')
+
+insert into tb_clientes values
+       ('Andrey','Rua 1',20,'m','11-99999-9999','email...'),
+       ('AnderSON','Rua 2',20,'m','11-99999-9999','email...'),
+       ('Vitoria','Rua 3',20,'m','11-99999-9999','email...'),
+       ('Carminha','Rua 4',20,'m','11-99999-9999','email...'),
+       ('Romana','Rua 5',20,'m','11-99999-9999','email...')
+GO
+
+insert into tb_item_vendido values
+       (1,10,20.00),
+       (2,10,600.00),
+       (3,10,250.00)
+ GO  
+ 
+ insert into tb_vendas(id_cliente, id_item_vendido) values
+       (4,1),
+       (1,2),
+       (5,3)
+ GO     
 
 	  
+	 select * from tb_vendas
+	 select * from tb_clientes
+	 select * from tb_item_vendido	 
+	 select * from tb_produtos
+	 
+	 
+select c.nome, v.id_venda, v.id_item_vendido from tb_clientes as c INNER JOIN tb_vendas as v on c.id_cliente = v.id_cliente;
+go
 
+select c.nome, v.id_venda, v.id_item_vendido from tb_clientes as c LEFT JOIN tb_vendas as v on c.id_cliente = v.id_cliente where v.id_venda is null;
+go
+
+select d.descricao,d.id_produto, v.id_item_venda from tb_produtos as d LEFT JOIN tb_item_vendido as v on d.id_produto = v.id_produto where v.id_produto is null;
+go
