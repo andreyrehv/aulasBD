@@ -15,7 +15,8 @@ go
 create table tb_vendas(
        id_venda int primary key IDENTITY(1,1),
        id_cliente int not null,
-	   id_item_vendido int not null
+	   id_item_vendido int not null,
+	   venda_cancel varchar (3)check (venda_cancel = 'SIM')
              
 )
 GO
@@ -115,3 +116,26 @@ go
 
 select d.descricao,d.id_produto, v.id_item_venda from tb_produtos as d LEFT JOIN tb_item_vendido as v on d.id_produto = v.id_produto where v.id_produto is null;
 go
+
+create trigger triggervendas_cancel on tb_vendas for update as
+
+declare @vd_cancel varchar (3);
+declare @vendas varchar (50);
+
+select @vd_cancel = x.venda_cancel from inserted x;
+select @vendas = x.id_venda from inserted x;
+
+if(@vd_cancel = 'SIM')
+insert into tb_vendas_canceladas (id_item_venda)values (@vendas)
+go
+
+update tb_vendas
+set venda_cancel = 'SIM' where id_item_vendido = 1
+go
+
+select * from tb_vendas
+go
+
+select * from tb_vendas_canceladas
+go
+
