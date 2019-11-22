@@ -140,7 +140,7 @@ select * from tb_vendas_canceladas
 go
 
 
--- Procidore
+-- Procedure
 create procedure tabela_vendas 
 @tbvendas int as select * from tb_vendas where id_item_vendido = @tbvendas
 go
